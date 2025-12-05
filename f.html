@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REXX WEB - WhatsApp Bug System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Science Gothic', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .bg-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(25, 211, 111, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(37, 211, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 128, 105, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00ff88, #00ccff, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        .logo h2 {
+            font-size: 1.5rem;
+            color: #00ff88;
+        }
+        
+        .anime-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            margin: 20px auto;
+            display: block;
+            object-fit: cover;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .owner-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: block;
+            object-fit: cover;
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ff88;
+            font-size: 1.1rem;
+        }
+        
+        .input-rgb {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            border: 2px solid transparent;
+            animation: rgbBorder 3s infinite linear;
+        }
+        
+        @keyframes rgbBorder {
+            0% { border-color: #ff0000; }
+            33% { border-color: #00ff00; }
+            66% { border-color: #0000ff; }
+            100% { border-color: #ff0000; }
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00ff88, #00ccff);
+            border: none;
+            border-radius: 10px;
+            color: #0c0c0c;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 30px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-rgb {
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 400% 400%;
+            animation: rgbBg 3s infinite linear;
+            color: white;
+        }
+        
+        @keyframes rgbBg {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .menu-item {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .menu-item i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #00ff88;
+        }
+        
+        .menu-item h3 {
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .txt-rgb {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 30px 0;
+            animation: rgbText 3s infinite linear;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes rgbText {
+            0% { color: #ff0000; }
+            33% { color: #00ff00; }
+            66% { color: #0000ff; }
+            100% { color: #ff0000; }
+        }
+        
+        .section-title {
+            color: #00ff88;
+            font-size: 1.5rem;
+            margin: 20px 0 10px;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 5px;
+        }
+        
+        .role-item {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #00ff88;
+        }
+        
+        .role-item h4 {
+            color: #00ccff;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .role-item p {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+        
+        .payment-info {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .payment-info h4 {
+            color: #ff5555;
+            margin-bottom: 10px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 2px solid #00ff88;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        
+        .process-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .process-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .process-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+            border-radius: 10px;
+            transition: width 2s;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 136, 0.9);
+            color: #0c0c0c;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 100;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .profile-info {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .profile-field {
+            margin: 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-field label {
+            color: #00ff88;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .profile-field span {
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .user-creation {
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .user-creation.active {
+            display: block;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .terminal {
+            background: #000;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #00ff88;
+        }
+        
+        .terminal-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+        }
+        
+        .terminal-success {
+            color: #0f0;
+        }
+        
+        .terminal-error {
+            color: #f00;
+        }
+        
+        .terminal-info {
+            color: #0ff;
+        }
+        
+        .terminal-warning {
+            color: #ff0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background-color: #0f0;
+            box-shadow: 0 0 10px #0f0;
+        }
+        
+        .status-offline {
+            background-color: #f00;
+            box-shadow: 0 0 10px #f00;
+        }
+        
+        .status-processing {
+            background-color: #ff0;
+            box-shadow: 0 0 10px #ff0;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .log-container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .log-time {
+            color: #888;
+            font-size: 0.8rem;
+        }
+        
+        .log-message {
+            color: #0ff;
+        }
+        
+        .api-response {
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #00aaff;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #aaffff;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .anime-img, .owner-img {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .terminal {
+                height: 200px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .warning-box {
+            background: rgba(255, 100, 0, 0.2);
+            border: 2px solid #ff5500;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .warning-box h4 {
+            color: #ff5500;
+            margin-bottom: 10px;
+        }
+        
+        .success-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .success-box h4 {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effect"></div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <div class="container">
+        <!-- Halaman Login -->
+        <div class="page active" id="login-page">
+            <div class="logo">
+                <h1>REXX WEB</h1>
+                <h2>WhatsApp Bug System v4.0</h2>
+            </div>
+            
+            <img src="https://iili.io/fT2M63F.md.jpg" alt="Anime Villain Login" class="anime-img">
+            
+            <div class="input-group">
+                <label for="username"><i class="fas fa-user"></i> USERNAME</label>
+                <input type="text" id="username" class="input-rgb" placeholder="Masukkan username" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label for="password"><i class="fas fa-key"></i> PASSWORD</label>
+                <input type="password" id="password" class="input-rgb" placeholder="Masukkan password" autocomplete="off">
+            </div>
+            
+            <button class="btn btn-rgb" id="login-btn">
+                <i class="fas fa-rocket"></i> LOGIN 🚀
+            </button>
+            
+            <div class="success-box">
+                <h4><i class="fas fa-shield-alt"></i> SYSTEM READY</h4>
+                <p>WhatsApp Bug Engine Active | Network Killer Online</p>
+            </div>
+        </div>
+        
+        <!-- Halaman Utama -->
+        <div class="page" id="main-page">
+            <div class="logo">
+                <h1>REXX WEB</h1>
+                <h2>WhatsApp Bug System v4.0</h2>
+            </div>
+            
+            <img src="https://iili.io/fT2W2l1.md.jpg" alt="Anime Villain Main" class="anime-img">
+            
+            <div class="txt-rgb">SELAMAT DATANG DI REXX WEB V4</div>
+            
+            <div class="log-container">
+                <div class="log-time">[SYSTEM]</div>
+                <div class="log-message">
+                    <span class="status-indicator status-online"></span>
+                    WhatsApp Bug Engine: ACTIVE | Network Killer: ONLINE
+                </div>
+            </div>
+            
+            <button class="btn" id="continue-btn">
+                <i class="fas fa-rocket"></i> LANJUT KE MENU 🚀
+            </button>
+            
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> HIGH SECURITY MODE</h4>
+                <p>System Protected by Military-Grade Encryption | All Operations Logged</p>
+            </div>
+        </div>
+        
+        <!-- Halaman Bug Menu -->
+        <div class="page" id="bug-page">
+            <div class="logo">
+                <h1>REXX WEB V4</h1>
+                <h2>Control Panel</h2>
+            </div>
+            
+            <button class="back-btn" id="back-to-main">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            
+            <div class="log-container">
+                <div class="log-time">[SYSTEM]</div>
+                <div class="log-message">
+                    <span class="status-indicator status-online"></span>
+                    User: <span id="current-user-display">Guest</span> | Role: <span id="current-role-display">None</span> | Status: ACTIVE
+                </div>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-item" data-page="buy-role">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>🛍 BUY ROLE</h3>
+                </div>
+                
+                <div class="menu-item" data-page="whatsapp">
+                    <i class="fas fa-wrench"></i>
+                    <h3>🔧 WHATSAPP BUG</h3>
+                </div>
+                
+                <div class="menu-item" data-page="killer">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <h3>📣 KILLER JARINGAN</h3>
+                </div>
+                
+                <div class="menu-item" data-page="owner">
+                    <i class="fas fa-crown"></i>
+                    <h3>🚀 OWNER</h3>
+                </div>
+                
+                <div class="menu-item" data-page="profile">
+                    <i class="fas fa-user"></i>
+                    <h3>🥶 PROFIL</h3>
+                </div>
+                
+                <div class="menu-item" data-page="logs">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>📊 LOGS</h3>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman Buy Role -->
+        <div class="page" id="buy-role-page">
+            <button class="back-btn" id="back-to-bug">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">🛍 BUY ROLE - REXX WEB</div>
+            
+            <div class="role-item">
+                <h4>🥉 PARNERT - 40 RIBU</h4>
+                <p>Akses fitur basic WhatsApp Bug & Killer Jaringan</p>
+                <p><strong>Pembayaran:</strong> Go-Pay ke 081368435091</p>
+                <button class="btn" onclick="buyRole('PARNERT')" style="margin: 10px 0; padding: 10px;">
+                    <i class="fas fa-shopping-cart"></i> Beli Role
+                </button>
+            </div>
+            
+            <div class="role-item">
+                <h4>🥈 RESELLER - 100 RIBU</h4>
+                <p>Akses semua fitur + bisa buat user baru</p>
+                <p><strong>Pembayaran:</strong> Go-Pay ke 081368435091</p>
+                <button class="btn" onclick="buyRole('RESELLER')" style="margin: 10px 0; padding: 10px;">
+                    <i class="fas fa-shopping-cart"></i> Beli Role
+                </button>
+            </div>
+            
+            <div class="role-item">
+                <h4>🥇 OWNER - 200 RIBU</h4>
+                <p>Akses premium + priority support + semua fitur unlocked</p>
+                <p><strong>Pembayaran:</strong> Go-Pay ke 081368435091</p>
+                <button class="btn" onclick="buyRole('OWNER')" style="margin: 10px 0; padding: 10px;">
+                    <i class="fas fa-shopping-cart"></i> Beli Role
+                </button>
+            </div>
+            
+            <div class="payment-info">
+                <h4><i class="fas fa-exclamation-circle"></i> INSTRUKSI PEMBAYARAN</h4>
+                <p>1. Transfer ke Go-Pay: 081368435091</p>
+                <p>2. Screenshot bukti transfer</p>
+                <p>3. Kirim ke admin dengan format: ROLE#NAMA#BUKTI</p>
+                <p>4. Role akan diaktifkan dalam 1-2 jam</p>
+            </div>
+        </div>
+        
+        <!-- Halaman WhatsApp Bug -->
+        <div class="page" id="whatsapp-page">
+            <button class="back-btn" id="back-to-bug-2">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">🔧 WHATSAPP BUG SYSTEM</div>
+            
+            <div class="terminal" id="whatsapp-terminal">
+                <div class="terminal-line terminal-info">[SYSTEM] WhatsApp Bug Engine v4.2</div>
+                <div class="terminal-line terminal-success">[STATUS] <span class="status-indicator status-online"></span> Online & Connected</div>
+                <div class="terminal-line terminal-info">[API] WhatsApp Web API Connection: ESTABLISHED</div>
+                <div class="terminal-line terminal-info">[SECURITY] Military-Grade Encryption: ACTIVE</div>
+                <div class="terminal-line terminal-warning">[READY] System ready for target execution</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="target-number"><i class="fas fa-mobile-alt"></i> 📱 NOMOR TARGET 🎯</label>
+                <input type="text" id="target-number" class="input-rgb" placeholder="Contoh: 6281234567890" maxlength="15">
+            </div>
+            
+            <div class="input-group">
+                <label for="phone-type"><i class="fas fa-mobile"></i> 🚀 TYPE HANDPHONE</label>
+                <select id="phone-type">
+                    <option value="">Pilih type HP</option>
+                    <option value="IOS">📱 IOS (iPhone)</option>
+                    <option value="ANDROID">🤖 ANDROID</option>
+                    <option value="ALL">⚡ ALL TYPE (Universal)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="bug-type"><i class="fas fa-bug"></i> 📣 JENIS BUG</label>
+                <select id="bug-type">
+                    <option value="">Pilih jenis bug</option>
+                    <option value="crash_hard">💥 Crash Hard (Force Close)</option>
+                    <option value="crash_normal">📵 Crash Normal</option>
+                    <option value="delay_hard">🐌 Delay Hard (30+ detik)</option>
+                    <option value="delay_normal">⏱️ Delay Normal (10 detik)</option>
+                    <option value="blank_hard">⬛ Blank Hard (Black Screen)</option>
+                    <option value="blank_normal">📱 Blank Normal</option>
+                    <option value="spam_light">📨 Spam Light (10 pesan)</option>
+                    <option value="spam_heavy">📬 Spam Heavy (100 pesan)</option>
+                </select>
+            </div>
+            
+            <div class="process-container">
+                <button class="btn btn-rgb" id="bug-btn">
+                    <i class="fas fa-bug"></i> EXECUTE BUG 🐞
+                </button>
+                
+                <div class="process-bar" id="bug-process-bar">
+                    <div class="process-fill"></div>
+                </div>
+                
+                <div id="bug-result" style="display: none; margin-top: 20px;">
+                    <div class="api-response">
+                        <strong>RESULT:</strong> <span id="bug-result-text"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <h4><i class="fas fa-check-circle"></i> SYSTEM READY</h4>
+                <p>WhatsApp Bug Engine Active | Target Execution Ready</p>
+            </div>
+        </div>
+        
+        <!-- Halaman Killer Jaringan -->
+        <div class="page" id="killer-page">
+            <button class="back-btn" id="back-to-bug-3">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">📣 KILLER JARINGAN SYSTEM</div>
+            
+            <div class="terminal" id="network-terminal">
+                <div class="terminal-line terminal-info">[SYSTEM] Network Killer v3.1</div>
+                <div class="terminal-line terminal-success">[STATUS] <span class="status-indicator status-online"></span> Online & Armed</div>
+                <div class="terminal-line terminal-info">[PROTOCOLS] TCP/UDP/ICMP Loaded & Ready</div>
+                <div class="terminal-line terminal-info">[BANDWIDTH] 10Gbps Attack Bandwidth Available</div>
+                <div class="terminal-line terminal-warning">[READY] Attack vectors ready for deployment</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="operator"><i class="fas fa-satellite-dish"></i> 📡 OPERATOR / PROVIDER</label>
+                <select id="operator" class="input-rgb">
+                    <option value="">Pilih Operator/Provider</option>
+                    <option value="telkomsel">📶 Telkomsel</option>
+                    <option value="xl">📶 XL Axiata</option>
+                    <option value="indosat">📶 Indosat Ooredoo</option>
+                    <option value="three">📶 3 (Tri)</option>
+                    <option value="smartfren">📶 Smartfren</option>
+                    <option value="wifi">📶 WiFi Network</option>
+                    <option value="other">📶 Lainnya</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="ip-address"><i class="fas fa-network-wired"></i> 📱 ALAMAT IP / TARGET</label>
+                <input type="text" id="ip-address" class="input-rgb" placeholder="Contoh: 192.168.1.1 atau 081234567890">
+            </div>
+            
+            <div class="input-group">
+                <label for="attack-type"><i class="fas fa-bolt"></i> ⚡ TIPE SERANGAN</label>
+                <select id="attack-type" class="input-rgb">
+                    <option value="">Pilih Tipe Serangan</option>
+                    <option value="ddos">🌪️ DDoS Flood Attack</option>
+                    <option value="ping">💀 Ping of Death</option>
+                    <option value="slowloris">🐌 Slowloris Attack</option>
+                    <option value="dns">📡 DNS Amplification</option>
+                    <option value="arp">🔄 ARP Spoofing</option>
+                    <option value="syn">📨 SYN Flood</option>
+                </select>
+            </div>
+            
+            <div class="process-container">
+                <button class="btn btn-rgb" id="kill-btn">
+                    <i class="fas fa-skull-crossbones"></i> LAUNCH ATTACK ⚡
+                </button>
+                
+                <div class="process-bar" id="kill-process-bar">
+                    <div class="process-fill"></div>
+                </div>
+                
+                <div id="kill-result" style="display: none; margin-top: 20px;">
+                    <div class="api-response">
+                        <strong>RESULT:</strong> <span id="kill-result-text"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> HIGH IMPACT SYSTEM</h4>
+                <p>Network Killer Active | All Protocols Armed | Ready for Target</p>
+            </div>
+        </div>
+        
+        <!-- Halaman Owner -->
+        <div class="page" id="owner-page">
+            <button class="back-btn" id="back-to-bug-4">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">🚀 OWNER PANEL</div>
+            
+            <img src="https://iili.io/fT2Wt1I.md.jpg" alt="Anime Villain Owner" class="owner-img">
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <h3 style="color: #ff0000; font-size: 1.8rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">
+                    <i class="fas fa-crown"></i> REXX WEB OWNER
+                </h3>
+            </div>
+            
+            <div class="role-item">
+                <h4><i class="fas fa-server"></i> SERVER STATUS</h4>
+                <div id="api-status">
+                    <span class="status-indicator status-online"></span> Sistem Online & Active
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Users Active:</strong> <span id="active-users">0</span><br>
+                    <strong>Bugs Executed:</strong> <span id="total-bugs">0</span><br>
+                    <strong>Attacks Launched:</strong> <span id="total-attacks">0</span>
+                </div>
+            </div>
+            
+            <div class="role-item">
+                <h4><i class="fas fa-info-circle"></i> SYSTEM INFORMATION</h4>
+                <p>Rexx Web V4 - Advanced WhatsApp Bug & Network Killer System. Developed for authorized operations only.</p>
+            </div>
+            
+            <div class="warning-box">
+                <h4><i class="fas fa-shield-alt"></i> SECURITY NOTICE</h4>
+                <p>System Protected by Advanced Encryption | All Operations Logged | Unauthorized Access Prohibited</p>
+            </div>
+        </div>
+        
+        <!-- Halaman Profil -->
+        <div class="page" id="profile-page">
+            <button class="back-btn" id="back-to-bug-5">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">🥶 PROFIL USER</div>
+            
+            <div class="profile-info">
+                <div class="profile-field">
+                    <label><i class="fas fa-user-tag"></i> USERNAME:</label>
+                    <span id="profile-name">-</span>
+                </div>
+                
+                <div class="profile-field">
+                    <label><i class="fas fa-user-shield"></i> ROLE:</label>
+                    <span id="profile-role">-</span>
+                </div>
+                
+                <div class="profile-field">
+                    <label><i class="fas fa-key"></i> API KEY:</label>
+                    <span id="api-key">********</span>
+                    <button class="btn" style="margin: 10px 0; padding: 8px;" onclick="generateApiKey()">
+                        <i class="fas fa-key"></i> Generate API Key
+                    </button>
+                </div>
+                
+                <div class="profile-field">
+                    <label><i class="fas fa-calendar-alt"></i> JOIN DATE:</label>
+                    <span id="join-date">-</span>
+                </div>
+            </div>
+            
+            <!-- Form untuk membuat user baru (hanya untuk RESELLER) -->
+            <div class="user-creation" id="user-creation-form">
+                <div class="section-title">👥 CREATE USER (Reseller Only)</div>
+                
+                <div class="input-group">
+                    <label for="new-username"><i class="fas fa-user-plus"></i> Username Baru</label>
+                    <input type="text" id="new-username" class="input-rgb" placeholder="Masukkan username baru">
+                </div>
+                
+                <div class="input-group">
+                    <label for="new-password"><i class="fas fa-lock"></i> Password Baru</label>
+                    <input type="password" id="new-password" class="input-rgb" placeholder="Masukkan password baru">
+                </div>
+                
+                <button class="btn" id="create-user-btn">
+                    <i class="fas fa-user-plus"></i> Buat User Baru
+                </button>
+            </div>
+        </div>
+        
+        <!-- Halaman Logs -->
+        <div class="page" id="logs-page">
+            <button class="back-btn" id="back-to-bug-6">
+                <i class="fas fa-arrow-left"></i> Kembali ke Menu
+            </button>
+            
+            <div class="section-title">📊 SYSTEM LOGS</div>
+            
+            <div class="terminal" id="system-logs-terminal" style="height: 400px;">
+                <div class="terminal-line terminal-info">[SYSTEM] Logs Viewer v1.0</div>
+                <div class="terminal-line terminal-info">[TIME] Loading operation logs...</div>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn" onclick="clearLogs()" style="margin: 5px;">
+                    <i class="fas fa-trash"></i> Clear Logs
+                </button>
+                <button class="btn" onclick="refreshLogs()" style="margin: 5px;">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+                <button class="btn" onclick="exportLogs()" style="margin: 5px;">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 REXX WEB V4 - WhatsApp Bug System</p>
+        <p style="font-size: 0.8rem; color: #666;">Advanced Bug System | Network Killer | Premium Tools</p>
+    </footer>
+
+    <script>
+        // ==================== SYSTEM VARIABLES ====================
+        const SYSTEM_VERSION = "4.0";
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('rexx_users')) || [
+            { username: "admin", password: "admin123", role: "OWNER", apiKey: "sk_admin_" + Date.now(), joinDate: new Date().toISOString() },
+            { username: "reseller", password: "reseller123", role: "RESELLER", apiKey: "sk_reseller_" + Date.now(), joinDate: new Date().toISOString() },
+            { username: "user", password: "user123", role: "MEMBER", apiKey: "sk_user_" + Date.now(), joinDate: new Date().toISOString() }
+        ];
+        
+        let systemLogs = JSON.parse(localStorage.getItem('rexx_logs')) || [];
+        let bugHistory = JSON.parse(localStorage.getItem('rexx_bugs')) || [];
+        let attackHistory = JSON.parse(localStorage.getItem('rexx_attacks')) || [];
+        
+        // ==================== DOM ELEMENTS ====================
+        const pages = {
+            login: document.getElementById('login-page'),
+            main: document.getElementById('main-page'),
+            bug: document.getElementById('bug-page'),
+            buyRole: document.getElementById('buy-role-page'),
+            whatsapp: document.getElementById('whatsapp-page'),
+            killer: document.getElementById('killer-page'),
+            owner: document.getElementById('owner-page'),
+            profile: document.getElementById('profile-page'),
+            logs: document.getElementById('logs-page')
+        };
+        
+        const notification = document.getElementById('notification');
+        
+        // ==================== UTILITY FUNCTIONS ====================
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.background = type === 'success' ? 
+                'rgba(0, 255, 136, 0.9)' : 
+                type === 'error' ? 
+                'rgba(255, 0, 0, 0.9)' : 
+                'rgba(255, 165, 0, 0.9)';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function addSystemLog(message, type = 'info') {
+            const log = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                message: message,
+                type: type,
+                user: currentUser?.username || 'guest'
+            };
+            
+            systemLogs.unshift(log);
+            if (systemLogs.length > 100) systemLogs.pop();
+            
+            localStorage.setItem('rexx_logs', JSON.stringify(systemLogs));
+            updateLogsDisplay();
+        }
+        
+        function updateLogsDisplay() {
+            const terminal = document.getElementById('system-logs-terminal');
+            if (!terminal) return;
+            
+            terminal.innerHTML = '';
+            
+            const header = document.createElement('div');
+            header.className = 'terminal-line terminal-info';
+            header.textContent = `[SYSTEM] Operation Logs - ${systemLogs.length} entries`;
+            terminal.appendChild(header);
+            
+            systemLogs.slice(0, 20).forEach(log => {
+                const line = document.createElement('div');
+                line.className = `terminal-line terminal-${log.type}`;
+                
+                const time = new Date(log.timestamp).toLocaleTimeString();
+                line.textContent = `[${time}] [${log.user}] ${log.message}`;
+                terminal.appendChild(line);
+            });
+            
+            terminal.scrollTop = 0;
+        }
+        
+        function goToPage(page) {
+            Object.values(pages).forEach(p => p.classList.remove('active'));
+            page.classList.add('active');
+        }
+        
+        function checkRole(username) {
+            const firstLetter = username.charAt(0).toUpperCase();
+            if (firstLetter === 'R') return 'OWNER';
+            if (firstLetter === 'P') return 'RESELLER';
+            return 'MEMBER';
+        }
+        
+        function updateUserDisplay() {
+            if (currentUser) {
+                document.getElementById('current-user-display').textContent = currentUser.username;
+                document.getElementById('current-role-display').textContent = currentUser.role;
+            }
+        }
+        
+        // ==================== AUTHENTICATION ====================
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showNotification('Harap isi username dan password!', 'error');
+                return;
+            }
+            
+            const existingUser = users.find(u => u.username === username && u.password === password);
+            
+            if (existingUser) {
+                currentUser = existingUser;
+                showNotification(`Access Granted, ${username}!`, 'success');
+                addSystemLog(`User ${username} logged in successfully`, 'success');
+                
+                localStorage.setItem('rexx_current_user', JSON.stringify(currentUser));
+                goToPage(pages.main);
+                updateUserDisplay();
+            } else {
+                const role = checkRole(username);
+                const newUser = {
+                    username,
+                    password,
+                    role,
+                    apiKey: `sk_${username}_${Date.now()}`,
+                    joinDate: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                currentUser = newUser;
+                
+                localStorage.setItem('rexx_users', JSON.stringify(users));
+                localStorage.setItem('rexx_current_user', JSON.stringify(currentUser));
+                
+                showNotification(`Account created! Access Level: ${role}`, 'success');
+                addSystemLog(`New user registered: ${username} (${role})`, 'info');
+                
+                goToPage(pages.main);
+                updateUserDisplay();
+            }
+        });
+        
+        // ==================== NAVIGATION ====================
+        document.getElementById('continue-btn').addEventListener('click', () => goToPage(pages.bug));
+        
+        // Back buttons
+        document.getElementById('back-to-main').addEventListener('click', () => goToPage(pages.main));
+        document.getElementById('back-to-bug').addEventListener('click', () => goToPage(pages.bug));
+        document.getElementById('back-to-bug-2').addEventListener('click', () => goToPage(pages.bug));
+        document.getElementById('back-to-bug-3').addEventListener('click', () => goToPage(pages.bug));
+        document.getElementById('back-to-bug-4').addEventListener('click', () => goToPage(pages.bug));
+        document.getElementById('back-to-bug-5').addEventListener('click', () => goToPage(pages.bug));
+        document.getElementById('back-to-bug-6').addEventListener('click', () => goToPage(pages.bug));
+        
+        // Menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const pageName = this.getAttribute('data-page');
+                
+                switch(pageName) {
+                    case 'buy-role':
+                        goToPage(pages.buyRole);
+                        break;
+                    case 'whatsapp':
+                        goToPage(pages.whatsapp);
+                        break;
+                    case 'killer':
+                        goToPage(pages.killer);
+                        break;
+                    case 'owner':
+                        updateOwnerStats();
+                        goToPage(pages.owner);
+                        break;
+                    case 'profile':
+                        updateProfileInfo();
+                        goToPage(pages.profile);
+                        break;
+                    case 'logs':
+                        updateLogsDisplay();
+                        goToPage(pages.logs);
+                        break;
+                }
+            });
+        });
+        
+        // ==================== WHATSAPP BUG SYSTEM ====================
+        document.getElementById('bug-btn').addEventListener('click', function() {
+            const target = document.getElementById('target-number').value.trim();
+            const phoneType = document.getElementById('phone-type').value;
+            const bugType = document.getElementById('bug-type').value;
+            
+            if (!target || !phoneType || !bugType) {
+                showNotification('Harap isi semua field!', 'error');
+                return;
+            }
+            
+            if (!/^[0-9]{10,15}$/.test(target.replace(/\D/g, ''))) {
+                showNotification('Format nomor tidak valid!', 'error');
+                return;
+            }
+            
+            const bugTypes = {
+                'crash_hard': { name: 'Crash Hard', effect: 'Force Close App', duration: '30 detik' },
+                'crash_normal': { name: 'Crash Normal', effect: 'App Restart', duration: '15 detik' },
+                'delay_hard': { name: 'Delay Hard', effect: '30+ Second Delay', duration: '30 detik' },
+                'delay_normal': { name: 'Delay Normal', effect: '10 Second Delay', duration: '10 detik' },
+                'blank_hard': { name: 'Blank Hard', effect: 'Black Screen', duration: '45 detik' },
+                'blank_normal': { name: 'Blank Normal', effect: 'Blank Screen', duration: '20 detik' },
+                'spam_light': { name: 'Spam Light', effect: '10 Spam Messages', duration: '10 detik' },
+                'spam_heavy': { name: 'Spam Heavy', effect: '100 Spam Messages', duration: '60 detik' }
+            };
+            
+            const bugInfo = bugTypes[bugType] || { name: bugType, effect: 'Unknown', duration: '10 detik' };
+            
+            addSystemLog(`WhatsApp Bug initiated: ${target} (${bugInfo.name})`, 'info');
+            
+            // Simulate process
+            const processBar = document.getElementById('bug-process-bar');
+            const processFill = processBar.querySelector('.process-fill');
+            const terminal = document.getElementById('whatsapp-terminal');
+            const resultDiv = document.getElementById('bug-result');
+            const resultText = document.getElementById('bug-result-text');
+            
+            // Reset and show
+            processFill.style.width = '0%';
+            processBar.style.display = 'block';
+            resultDiv.style.display = 'none';
+            
+            // Add terminal logs
+            const addTerminalLog = (message, type = 'info') => {
+                const line = document.createElement('div');
+                line.className = `terminal-line terminal-${type}`;
+                line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            };
+            
+            addTerminalLog(`Target: ${target}`, 'info');
+            addTerminalLog(`Bug Type: ${bugInfo.name}`, 'info');
+            addTerminalLog('Connecting to WhatsApp Web API...', 'info');
+            
+            // Animate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                processFill.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Simulate success
+                    setTimeout(() => {
+                        processBar.style.display = 'none';
+                        
+                        addTerminalLog('✓ WhatsApp API Connection Established', 'success');
+                        addTerminalLog('✓ Target Device Verified', 'success');
+                        addTerminalLog('✓ Payload Encrypted & Generated', 'success');
+                        addTerminalLog(`✓ Bug "${bugInfo.name}" Successfully Delivered`, 'success');
+                        addTerminalLog(`Effect: ${bugInfo.effect}`, 'info');
+                        addTerminalLog(`Duration: ${bugInfo.duration}`, 'info');
+                        
+                        // Save to history
+                        bugHistory.push({
+                            id: Date.now(),
+                            target: target,
+                            type: bugInfo.name,
+                            timestamp: new Date().toISOString(),
+                            user: currentUser?.username
+                        });
+                        localStorage.setItem('rexx_bugs', JSON.stringify(bugHistory));
+                        
+                        // Show result
+                        resultText.textContent = `Bug "${bugInfo.name}" successfully delivered to ${target}. Effect: ${bugInfo.effect} (Duration: ${bugInfo.duration})`;
+                        resultDiv.style.display = 'block';
+                        
+                        showNotification(`Bug successfully delivered to ${target}!`, 'success');
+                        addSystemLog(`WhatsApp Bug completed: ${target}`, 'success');
+                        
+                        // Update stats
+                        updateOwnerStats();
+                    }, 500);
+                }
+            }, 100);
+        });
+        
+        // ==================== NETWORK KILLER SYSTEM ====================
+        document.getElementById('kill-btn').addEventListener('click', function() {
+            const operator = document.getElementById('operator').value;
+            const target = document.getElementById('ip-address').value.trim();
+            const attackType = document.getElementById('attack-type').value;
+            
+            if (!operator || !target || !attackType) {
+                showNotification('Harap isi semua field!', 'error');
+                return;
+            }
+            
+            const attackTypes = {
+                'ddos': { name: 'DDoS Flood', packets: '1M+', bandwidth: '10Gbps' },
+                'ping': { name: 'Ping of Death', packets: '100K', bandwidth: '1Gbps' },
+                'slowloris': { name: 'Slowloris', connections: '10K', duration: '1 hour' },
+                'dns': { name: 'DNS Amplification', amplification: '50x', requests: '100K' },
+                'arp': { name: 'ARP Spoofing', targets: 'All local', duration: '30 min' },
+                'syn': { name: 'SYN Flood', packets: '500K', bandwidth: '5Gbps' }
+            };
+            
+            const attackInfo = attackTypes[attackType] || { name: attackType, effect: 'Unknown' };
+            
+            addSystemLog(`Network Attack initiated: ${operator} - ${attackInfo.name}`, 'info');
+            
+            // Simulate process
+            const processBar = document.getElementById('kill-process-bar');
+            const processFill = processBar.querySelector('.process-fill');
+            const terminal = document.getElementById('network-terminal');
+            const resultDiv = document.getElementById('kill-result');
+            const resultText = document.getElementById('kill-result-text');
+            
+            // Reset and show
+            processFill.style.width = '0%';
+            processBar.style.display = 'block';
+            resultDiv.style.display = 'none';
+            
+            // Add terminal logs
+            const addTerminalLog = (message, type = 'info') => {
+                const line = document.createElement('div');
+                line.className = `terminal-line terminal-${type}`;
+                line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            };
+            
+            addTerminalLog(`Target: ${operator} (${target})`, 'info');
+            addTerminalLog(`Attack: ${attackInfo.name}`, 'info');
+            addTerminalLog('Initializing attack vectors...', 'info');
+            
+            // Animate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                processFill.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Simulate success
+                    setTimeout(() => {
+                        processBar.style.display = 'none';
+                        
+                        addTerminalLog('✓ Attack Vectors Prepared', 'success');
+                        addTerminalLog('✓ Target Vulnerability Identified', 'success');
+                        addTerminalLog('✓ Botnet Activated & Synchronized', 'success');
+                        addTerminalLog(`✓ ${attackInfo.name} Attack Successfully Launched`, 'success');
+                        addTerminalLog('Status: Attack Active - Impacting Target', 'warning');
+                        
+                        // Save to history
+                        attackHistory.push({
+                            id: Date.now(),
+                            target: target,
+                            operator: operator,
+                            attack: attackInfo.name,
+                            timestamp: new Date().toISOString(),
+                            user: currentUser?.username
+                        });
+                        localStorage.setItem('rexx_attacks', JSON.stringify(attackHistory));
+                        
+                        // Show result
+                        resultText.textContent = `${attackInfo.name} attack successfully launched against ${operator}. Target: ${target}. Attack is now active.`;
+                        resultDiv.style.display = 'block';
+                        
+                        showNotification(`Attack ${attackInfo.name} successfully launched!`, 'success');
+                        addSystemLog(`Network Attack completed: ${operator}`, 'success');
+                        
+                        // Update stats
+                        updateOwnerStats();
+                    }, 500);
+                }
+            }, 100);
+        });
+        
+        // ==================== PROFILE MANAGEMENT ====================
+        function updateProfileInfo() {
+            if (currentUser) {
+                document.getElementById('profile-name').textContent = currentUser.username;
+                document.getElementById('profile-role').textContent = currentUser.role;
+                document.getElementById('api-key').textContent = currentUser.apiKey || 'Not generated';
+                document.getElementById('join-date').textContent = new Date(currentUser.joinDate || Date.now()).toLocaleDateString();
+                
+                // Show/hide user creation form
+                const form = document.getElementById('user-creation-form');
+                if (currentUser.role === 'RESELLER' || currentUser.role === 'OWNER') {
+                    form.classList.add('active');
+                } else {
+                    form.classList.remove('active');
+                }
+            }
+        }
+        
+        function generateApiKey() {
+            if (!currentUser) return;
+            
+            const newApiKey = `sk_${currentUser.username}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            currentUser.apiKey = newApiKey;
+            
+            // Update in users array
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex].apiKey = newApiKey;
+                localStorage.setItem('rexx_users', JSON.stringify(users));
+                localStorage.setItem('rexx_current_user', JSON.stringify(currentUser));
+            }
+            
+            document.getElementById('api-key').textContent = newApiKey;
+            showNotification('API Key generated successfully!', 'success');
+            addSystemLog(`API Key regenerated for ${currentUser.username}`, 'info');
+        }
+        
+        document.getElementById('create-user-btn').addEventListener('click', function() {
+            if (!currentUser || (currentUser.role !== 'RESELLER' && currentUser.role !== 'OWNER')) {
+                showNotification('Hanya Reseller dan Owner yang bisa membuat user!', 'error');
+                return;
+            }
+            
+            const username = document.getElementById('new-username').value.trim();
+            const password = document.getElementById('new-password').value.trim();
+            
+            if (!username || !password) {
+                showNotification('Harap isi username dan password!', 'error');
+                return;
+            }
+            
+            if (users.find(u => u.username === username)) {
+                showNotification('Username sudah digunakan!', 'error');
+                return;
+            }
+            
+            const role = checkRole(username);
+            const newUser = {
+                username,
+                password,
+                role,
+                apiKey: `sk_${username}_${Date.now()}`,
+                joinDate: new Date().toISOString(),
+                createdBy: currentUser.username
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('rexx_users', JSON.stringify(users));
+            
+            showNotification(`User ${username} created! Role: ${role}`, 'success');
+            addSystemLog(`New user created: ${username} (${role}) by ${currentUser.username}`, 'success');
+            
+            // Reset form
+            document.getElementById('new-username').value = '';
+            document.getElementById('new-password').value = '';
+        });
+        
+        // ==================== BUY ROLE SYSTEM ====================
+        function buyRole(role) {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const prices = {
+                'PARNERT': 40000,
+                'RESELLER': 100000,
+                'OWNER': 200000
+            };
+            
+            const price = prices[role];
+            
+            showNotification(
+                `Role ${role} - Rp ${price.toLocaleString()}\n` +
+                `Transfer ke: 081368435091 (Go-Pay)\n` +
+                `Konfirmasi ke admin setelah transfer.`,
+                'info'
+            );
+            
+            addSystemLog(`User ${currentUser.username} initiated purchase of ${role} role`, 'info');
+        }
+        
+        // ==================== OWNER STATS ====================
+        function updateOwnerStats() {
+            if (!pages.owner.classList.contains('active')) return;
+            
+            const activeUsers = users.filter(u => u.apiKey).length;
+            document.getElementById('active-users').textContent = activeUsers;
+            document.getElementById('total-bugs').textContent = bugHistory.length;
+            document.getElementById('total-attacks').textContent = attackHistory.length;
+        }
+        
+        // ==================== LOGS MANAGEMENT ====================
+        function clearLogs() {
+            if (!confirm('Yakin ingin menghapus semua logs?')) return;
+            
+            systemLogs = [];
+            localStorage.setItem('rexx_logs', JSON.stringify(systemLogs));
+            updateLogsDisplay();
+            showNotification('Logs cleared!', 'success');
+        }
+        
+        function refreshLogs() {
+            updateLogsDisplay();
+            showNotification('Logs refreshed!', 'success');
+        }
+        
+        function exportLogs() {
+            const dataStr = JSON.stringify(systemLogs, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `rexx_logs_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Logs exported!', 'success');
+            addSystemLog('Logs exported by user', 'info');
+        }
+        
+        // ==================== INITIALIZATION ====================
+        window.addEventListener('DOMContentLoaded', function() {
+            // Load saved user
+            const savedUser = localStorage.getItem('rexx_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                goToPage(pages.main);
+                updateUserDisplay();
+                addSystemLog('Session restored - System Ready', 'info');
+            }
+            
+            // Load saved data
+            const savedUsers = localStorage.getItem('rexx_users');
+            const savedLogs = localStorage.getItem('rexx_logs');
+            const savedBugs = localStorage.getItem('rexx_bugs');
+            const savedAttacks = localStorage.getItem('rexx_attacks');
+            
+            if (savedUsers) users = JSON.parse(savedUsers);
+            if (savedLogs) systemLogs = JSON.parse(savedLogs);
+            if (savedBugs) bugHistory = JSON.parse(savedBugs);
+            if (savedAttacks) attackHistory = JSON.parse(savedAttacks);
+            
+            // Add welcome log
+            if (systemLogs.length === 0) {
+                addSystemLog(`REXX Web v${SYSTEM_VERSION} initialized - System Armed`, 'info');
+                addSystemLog('WhatsApp Bug Engine: READY | Network Killer: ARMED', 'success');
+            }
+            
+            // Enter key for login
+            document.getElementById('username').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('login-btn').click();
+            });
+            
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('login-btn').click();
+            });
+        });
+    </script>
+</body>
+</html>
